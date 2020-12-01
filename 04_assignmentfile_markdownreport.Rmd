@@ -84,7 +84,8 @@ Show the top 10 **largest** agency review teams as of today:
 Show the top **smallest** agency review teams as of today - which we'll define here as less than five members:
 
 ```{r, echo=FALSE}
-
+q4_filter <- transition_data_current %>% 
+  filter(agency==)
 
 
 
@@ -104,6 +105,18 @@ Below write code to show the new names added to the senior staff lists since the
   
 
 ```{r, echo=FALSE}
+source("01_scrape_agencyteams.R")
+source("02_scrape_nominees.R")
+
+
+seniorstaffnames <- readRDS("processed_data/transition_data_scraped.rds")
+seniorstaffnames
+
+transition_data_previous <- readRDS("archived_data/transition_data_archived_2020_12_01t17_18.rds")
+transition_data_previous
+
+newseniorstaff <- anti_join(seniorstaffnames, transition_data_previous, by = "idstring")
+newseniorstaff
 
 
 
@@ -146,11 +159,6 @@ namecount_compare <- namecount_compare %>%
   )
 
 seniorstaffnames <- transition_data_current
-
-saveRDS(newnames, "processed_data/newnames.rds")
-saveRDS(namecount_compare, "processed_data/agencycount_compare.rds")
-saveRDS(agencyteams, "processed_data/agencyteams.rds")
-
 
 
 
