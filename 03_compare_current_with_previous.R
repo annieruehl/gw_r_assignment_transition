@@ -24,10 +24,38 @@ source("02_scrape_nominees.R")
 
 #Your code here#
 
+transition_data_current <- readRDS("processed_data/transition_data_scraped.rds")
+transition_data_current
 
+transition_data_previous <- readRDS("archived_data/transition_data_archived_2020_11_24t09_52.rds")
+transition_data_previous
 
+newnames <- anti_join(transition_data_current, transition_data_previous, by = "idstring")
+newnames
 
+namecount_current <- transition_data_current %>% 
+  count(name, name = "current_count")
 
+namecount_current
+
+namecount_previous <- transition_data_previous %>% 
+  count(name, name = "previous_count")
+
+namecount_previous
+
+namecount_compare <- left_join(namecount_current, namecount_previous, by = "name")
+namecount_compare
+
+namecount_compare <- namecount_compare %>% 
+  mutate(
+    change = current_count - previous_count
+  )
+
+seniorstaffnames <- transition_data_current
+
+saveRDS(newnames, "processed_data/newnames.rds")
+saveRDS(namecount_compare, "processed_data/agencycount_compare.rds")
+saveRDS(agencyteams, "processed_data/agencyteams.rds")
 
 #### AGENCY TEAMS ##### --------------------------------------------------------
 
