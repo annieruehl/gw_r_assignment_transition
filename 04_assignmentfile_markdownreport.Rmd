@@ -1,6 +1,6 @@
 ---
 title: "GW Assignment - Biden Transition"
-author: "YOUR NAME HERE"
+author: "Annie Ruehl"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output: html_document
 ---
@@ -35,7 +35,18 @@ Below write code to show the new names added to the agency review team lists sin
   
 
 ```{r, echo=FALSE}
+source("01_scrape_agencyteams.R")
+source("02_scrape_nominees.R")
 
+
+transition_data_current <- readRDS("processed_data/transition_data_scraped.rds")
+transition_data_current
+
+transition_data_previous <- readRDS("archived_data/transition_data_archived_2020_12_01t17_18.rds")
+transition_data_previous
+
+newnames <- anti_join(transition_data_current, transition_data_previous, by = "idstring")
+newnames
 
 
  
@@ -107,7 +118,38 @@ Add code to show the total number of people currently named to the WH senior sta
   
 
 ```{r, echo=FALSE}
+transition_data_current <- readRDS("processed_data/transition_data_scraped.rds")
+transition_data_current
 
+transition_data_previous <- readRDS("archived_data/transition_data_archived_2020_11_24t09_52.rds")
+transition_data_previous
+
+newnames <- anti_join(transition_data_current, transition_data_previous, by = "idstring")
+newnames
+
+namecount_current <- transition_data_current %>% 
+  count(name, name = "current_count")
+
+namecount_current
+
+namecount_previous <- transition_data_previous %>% 
+  count(name, name = "previous_count")
+
+namecount_previous
+
+namecount_compare <- left_join(namecount_current, namecount_previous, by = "name")
+namecount_compare
+
+namecount_compare <- namecount_compare %>% 
+  mutate(
+    change = current_count - previous_count
+  )
+
+seniorstaffnames <- transition_data_current
+
+saveRDS(newnames, "processed_data/newnames.rds")
+saveRDS(namecount_compare, "processed_data/agencycount_compare.rds")
+saveRDS(agencyteams, "processed_data/agencyteams.rds")
 
 
 
