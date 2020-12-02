@@ -73,7 +73,8 @@ Add data to show the total number of people appointed to each agency team, along
 Show the top 10 **largest** agency review teams as of today:
 
 ```{r, echo=FALSE}
-
+q3_arrange <- transition_data_current %>% 
+  arrange(desc(agency))
 
 
 
@@ -85,8 +86,7 @@ Show the top **smallest** agency review teams as of today - which we'll define h
 
 ```{r, echo=FALSE}
 q4_filter <- transition_data_current %>% 
-  filter(agency==)
-
+  filter(agency=='Arts and Humanities', n==<5)
 
 
  
