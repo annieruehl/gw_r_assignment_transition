@@ -18,7 +18,7 @@ options(dplyr.summarise.inform = FALSE)
 
 #run the script for step 03 to update the datasets to caputre the current live verions
 #and load all the new dataset objects into the environment (you'll see them populate on the upper right window)
-source("03_analysis.R")
+source("03_compare_current_with_previous.R")
 
 
 ```
@@ -73,9 +73,10 @@ Add data to show the total number of people appointed to each agency team, along
 Show the top 10 **largest** agency review teams as of today:
 
 ```{r, echo=FALSE}
-q3_arrange <- transition_data_current %>% 
-  arrange(desc(agency))
+top10 <- transition_data_current %>% 
+  count(agency, sort == TRUE)
 
+filter(top10, n>= 22)
 
 
 
@@ -85,8 +86,10 @@ q3_arrange <- transition_data_current %>%
 Show the top **smallest** agency review teams as of today - which we'll define here as less than five members:
 
 ```{r, echo=FALSE}
-q4_filter <- transition_data_current %>% 
-  filter(agency=='Arts and Humanities', n==<5)
+smallestagency <- transition_data_current %>% 
+  count(agency)
+
+filter(smallestagency, n<=5)
 
 
  
